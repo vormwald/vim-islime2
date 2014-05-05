@@ -18,7 +18,8 @@ endfunction
 " Send up and enter to re-run the previous command
 nnoremap <leader>fp :call <SID>iTermSendUpEnter()<CR>
 function! s:iTermSendUpEnter()
-  call s:iTermSendNext("OA")
+  call s:iTermSendNext("OA
+")
 endfunction
 
 " Send the current visual selection or paragraph
@@ -35,17 +36,17 @@ nnoremap <leader>fd :call <SID>iTermSendNext("./script/deliver")<CR>
 " Run rake
 nnoremap <leader>fr :call <SID>iTermSendNext("rake")<CR>
 
-" Run file as a test (assumes ./script/test)
+" Run file as a spec (assumes ./bin/rspec)
 nnoremap <leader>ft :call <SID>iTermRunTest(expand("%"))<CR>
 
-" Run focused unit test (assumes ./script/test understands file:line notation)
+" Run focused unit test (assumes ./bin/rspec understands file:line notation)
 nnoremap <leader>fT :call <SID>iTermRunTest(expand("%") . ":" . line("."))<CR>
 
 function! s:iTermRunTest(file)
-  if filereadable("script/test")
-    call s:iTermSendNext("script/test " . a:file)
+  if filereadable("bin/rspec")
+    call s:iTermSendNext("bin/rspec " . a:file)
   else
-    echoerr "Couldn't execute " . getcwd() . "/script/test, please create test runner script."
+    echoerr "Couldn't execute " . getcwd() . "/bin/rspec, please create spec runner script."
   endif
 endfunction
 
@@ -53,7 +54,7 @@ let s:current_file=expand("<sfile>")
 
 " Sends the passed command to the next iTerm2 panel using Cmd+]
 function! s:iTermSendNext(command)
-  let l:run_command = fnamemodify(s:current_file, ":p:h:h") . "/scripts/run_command.scpt"
+  let l:run_command = fnamemodify(s:current_file, ":p:h:h") . "/bin/run_command.scpt"
   let g:islime2_last_command = a:command
   call system("osascript " . l:run_command . " " . s:shellesc(a:command))
 endfunction
